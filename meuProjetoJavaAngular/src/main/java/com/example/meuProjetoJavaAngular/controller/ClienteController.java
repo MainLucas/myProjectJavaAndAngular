@@ -15,7 +15,7 @@ import java.util.Optional;
 public class ClienteController {
 
     @Autowired
-    ClienteRepository clienteRepository;
+    private ClienteRepository clienteRepository;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -28,6 +28,15 @@ public class ClienteController {
         return clienteRepository
                 .findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
     }
+    @DeleteMapping("{id}")
+    public void deletaCliente(@PathVariable Integer id){
+            clienteRepository.findById(id)
+                    .map( cliente -> {
+                        clienteRepository.delete(cliente);
+                        return Void.TYPE;
+                    })
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
 }
